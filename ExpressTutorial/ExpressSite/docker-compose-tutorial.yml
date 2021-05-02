@@ -1,0 +1,84 @@
+version: "2"
+
+services:
+    nginx:
+        container_name: nginx 
+        build:
+            context: .
+            dockerfile: .docker/docker-nginx.dockerfile 
+        links:
+            - node1:node1
+            - node2:node2
+            - node3:node3
+        ports:
+            - "80:80"
+            - "443:443"
+        env_file:
+            - ./.docker/env/app.${APP_ENV}.env 
+        networks:
+            - thao-network 
+        
+    node1:
+        container_name: node-1 
+        build:
+            context: .
+            dockerfile: .docker/docker-node.dockerfile 
+        ports:
+            - "8080"
+        volumes:
+            - .:/var/www/thao 
+        working_dir: /var/www/thao 
+        env_file:
+            - ./.docker/env/app.${APP_ENV}.env 
+        networks:
+            - thao-network 
+            
+    node2:
+        container_name: node-2
+        build:
+            context: .
+            dockerfile: .docker/docker-node.dockerfile 
+        ports:
+            - "8080"
+        volumes:
+            - .:/var/www/thao 
+        working_dir: /var/www/thao 
+        env_file:
+            - ./.docker/env/app.${APP_ENV}.env 
+        networks:
+            - thao-network 
+            
+    node3:
+        container_name: node-3
+        build:
+            context: .
+            dockerfile: .docker/docker-node.dockerfile 
+        ports:
+            - "8080"
+        volumes:
+            - .:/var/www/thao 
+        working_dir: /var/www/thao 
+        env_file:
+            - ./.docker/env/app.${APP_ENV}.env 
+        networks:
+            - thao-network 
+    
+    mongo:
+        container_name: mongo 
+        build:
+            context: .
+            dockerfile: .docker/docker-mongo.dockerfile 
+        ports:
+        - "27017:27017"
+        env_file:
+            - ./.docker/env/mongo.${APP_ENV}.env
+            - ./.docker/env/app.${APP_ENV}.env
+        networks:
+            - thao-network 
+        
+    redis:
+        container_name: redis 
+        build:
+        
+            
+networks:

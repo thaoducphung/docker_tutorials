@@ -1,0 +1,103 @@
++ Docker Desktop
+
++ Docker Kitematic is very useful for beginner to see how the system work with GUI (pulling the images and run them without knowing the commands):
+https://github.com/docker/kitematic/releases
+
++ Docker Compose: bring more than one images
+
++ Docer Machine: for Docker Toolbox, create and manage local machines or clould machines.
+
+Key Docker Machine Commands:
+	- docker pull [image name]: pull the image from the Docker hub
+	- docker run [image name]: run the image after pulling from docker hub
+	- docker images : list all images
+	- docker ps: list all containers
+	- docker ps -a : list all not running + running containers
+	- docker stop: stop the container running
+	- docker rm [id of container]: remove containers 
+	- docker rmi [id of image]: remove image 
+	
+	
+Understanding Volumes:
++ Write on the Docker Host, alias to docker host
++ docker run -p 8080:3000 node 
++ docker run -p 8080:3000 -v /var/www node
+
++ docker run -p 8080:3000 -v $(pwd):/var/www -w "/var/www" node npm start
+	- Map port 8080 to 3000
+	- Map current directory $(pwd) to /var/www 
+	- Set current working directory of container -w "/var/www"
+	- Then run the command "npm start"
+	
++ docker run -it -p 8080:5000 -v $(pwd):/app -w "/app" mcr.microsoft.com/dotnet/core/sdk /bin/bash (Mac)
++ docker run -it -p 8080:5000 -v ${PWD}:/app -w "/app" mcr.microsoft.com/dotnet/core/sdk /bin/bash (PowerShell)
+https://blog.codewithdan.com/docker-volumes-and-print-working-directory-pwd/
+
+Dockerfile: text file for instructions to build the image and containers -> Docker Image and use contaienr for that 
+
+docker build -f Dockerfile 
+-f for the file name if different name is used
+
+Building a Custom Image 
+docker built -f <file name> -t <your username>/aspnetcore .
+-f for filename, -t for --tag and . for current context 
+
+Publishing the Image to Docker Hub
+MUST:
+docker login
+docker push thaophungduc/node 
+
+Communication between Docker Containers
++ Linking Options:
+	- Legacy Linking:
+		Run a container with a name
+		Link a running container by a name 
+		Repeat for additional containers 
+		
+		Examples:
+			Step1: + docker run -d --name my-postgres postgres 
+			--name define a name for the container 
+			Step2:
+			docker run -d -p 5000:5000 --link my-postgres:postgres thao/aspnetcore 
+			--link to named container : linked contaienr alias 
+			Step3: Repeat
+			
+	- Bridge network:
+		+ Isolate containers, or bridge network, through Docker client create isolated networks (can only communicate with other containers within same clusters) (group the containers in their isolated networks)
+		+ Command:
+			Step 1: create a custom bridge network 
+			Step 2: Run contaienr in the network 
+			
+			docker network create --driver bridge isolated_network 
+			docker run -d --net=isolated_network --name mongodb mongo 
+
+Key Docker Compose Commands:
+	+ docker-compose build 
+	+ docker-compose up 
+	+ docker-compose down 
+	+ docker-compose logs 
+	+ docker-compose ps 
+	+ docker-compose stop 
+	+ docker-compose start 
+	+ docker-compose rm 
+	
+Building Services, Start Up Services,
+docker-compose build : Build or rebuild services defined in docker-compose.yml 
+
+	
+Stop, Remove all the images 
+	docker-compose down --rmi all --volumes 
+	Remove all images and remove all the volumes 
+	
+Docker Compose in Action
+docker-compose up -d 
+docker-compose ps 
+
+docker rm -f $(docker ps -a -q)
+
+docker-compose down (Stop and remove)
+
+Kubernetes
+
+Ctrl+P+Q: quit the container with burning
+
